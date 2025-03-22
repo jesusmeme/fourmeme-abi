@@ -79,12 +79,6 @@ const ethers = require('ethers');
 createMemeToken();
 ```
 
-### Deploying a Test Version
-To test this ABI locally:
-1. Copy the ABI into a Solidity project (e.g., Hardhat or Truffle).
-2. Implement dummy logic matching the ABI in a contract.
-3. Deploy to BSC Testnet (`https://data-seed-prebsc-1-s1.binance.org:8545/`).
-
 ## Verification
 This ABI is a best-effort reconstruction and may not match the live contract exactly. To verify:
 1. Visit [BSCScan](https://bscscan.com/address/0x5c952063c7fc8610FFDB798152D69F0B9550762b#code) to check if the contract is verified and retrieve the official ABI.
