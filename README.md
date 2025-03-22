@@ -22,26 +22,30 @@ This repository contains the Application Binary Interface (ABI) for the Four.mem
 The full ABI is provided in [`abi.json`](./abi.json). Below is a summary of the key functions and events based on the reconstructed ABI:
 
 ### Functions
-| Function Name                | Inputs                                      | Outputs         | Description                                      |
-|------------------------------|---------------------------------------------|-----------------|--------------------------------------------------|
-| `createToken`                | `string name, string symbol, uint256 totalSupply` | `address`       | Creates a new meme token (payable: 0.005 BNB).   |
-| `buyToken`                   | `address token, uint256 amount`             | -               | Buys tokens via bonding curve (payable).         |
-| `sellToken`                  | `address token, uint256 amount`             | -               | Sells tokens back to the contract.               |
-| `addLiquidityToPancakeSwap`  | `address token`                             | -               | Adds liquidity to PancakeSwap at 24 BNB.         |
-| `getTokenPrice`              | `address token`                             | `uint256`       | Returns current token price (view).              |
-| `withdrawFees`               | `address recipient`                         | -               | Withdraws collected fees (admin only).           |
-| `setFee`                     | `uint256 newFee`                            | -               | Updates trading fee (admin only).                |
-| `pause`                      | -                                           | -               | Pauses contract operations (admin only).         |
-| `unpause`                    | -                                           | -               | Resumes contract operations (admin only).        |
-| `getBondingCurveProgress`    | `address token`                             | `uint256`       | Returns BNB in bonding curve (view).             |
 
-### Events
-| Event Name          | Parameters                                              | Description                              |
-|---------------------|--------------------------------------------------------|------------------------------------------|
-| `TokenCreated`      | `address indexed creator, address indexed token, string name` | Emitted when a new token is created.     |
-| `TokenPurchased`    | `address indexed buyer, address indexed token, uint256 amount, uint256 cost` | Logs a token purchase.                   |
-| `TokenSold`         | `address indexed seller, address indexed token, uint256 amount, uint256 refund` | Logs a token sale.                       |
-| `LiquidityAdded`    | `address indexed token, uint256 bnbAmount, uint256 tokenAmount` | Logs liquidity addition to PancakeSwap.  |
+| **Type**       | **Name**                       | **Inputs**                                                                                   | **Outputs**                                                                 | **Description**                                                                                              | **State Mutability** |
+|----------------|--------------------------------|---------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|----------------------|
+| **Error**      | `OwnableInvalidOwner`          | `owner` (address)                                                                           | -                                                                           | Thrown when an invalid owner address (e.g., zero address) is provided.                                      | -                    |
+| **Error**      | `OwnableUnauthorizedAccount`   | `account` (address)                                                                         | -                                                                           | Thrown when an account lacks permission to perform an action (e.g., not owner or authorized role).          | -                    |
+| **Event**      | `AdminChanged`                 | `previousAdmin` (address), `newAdmin` (address)                                             | -                                                                           | Emitted when the admin address changes.                                                                     | -                    |
+| **Event**      | `OwnershipTransferred`         | `previousOwner` (address, indexed), `newOwner` (address, indexed)                           | -                                                                           | Emitted when contract ownership is transferred.                                                             | -                    |
+| **Event**      | `TokenCreate`                  | `creator` (address), `token` (address), `requestId` (uint256), `name` (string), etc.        | -                                                                           | Emitted when a new token is created with specified parameters.                                              | -                    |
+| **Event**      | `TokenPurchase`                | `token` (address), `account` (address), `tokenAmount` (uint256), `etherAmount` (uint256)    | -                                                                           | Emitted when tokens are purchased.                                                                          | -                    |
+| **Event**      | `TradeStop`                    | `token` (address)                                                                           | -                                                                           | Emitted when trading is halted for a specific token.                                                        | -                    |
+| **Function**   | `createToken`                  | `requestId` (uint256), `name` (string), `symbol` (string), `totalSupply` (uint256), etc.    | -                                                                           | Creates a new token with specified parameters; payable with a launch fee.                                   | Payable             |
+| **Function**   | `purchaseToken`                | `tokenAddress` (address), `amount` (uint256), `maxFunds` (uint256)                          | -                                                                           | Purchases a specified amount of tokens, payable with Ether.                                                 | Payable             |
+| **Function**   | `saleToken`                    | `tokenAddress` (address), `amount` (uint256)                                                | -                                                                           | Sells a specified amount of tokens back to the contract.                                                    | Nonpayable          |
+| **Function**   | `_calcBuyCost`                 | `ti` (TokenInfo struct), `amount` (uint256)                                                 | `uint256`                                                                   | Calculates the Ether cost to buy a given token amount (pure function).                                      | Pure                |
+| **Function**   | `lastPrice`                    | `tokenAddress` (address)                                                                    | `uint256`                                                                   | Returns the last trading price of a token.                                                                  | View                |
+| **Function**   | `owner`                        | -                                                                                           | `address`                                                                   | Returns the current contract owner.                                                                         | View                |
+| **Function**   | `transferOwnership`            | `newOwner` (address)                                                                        | -                                                                           | Transfers ownership to a new address.                                                                       | Nonpayable          |
+| **Function**   | `grantRole`                    | `role` (bytes32), `account` (address)                                                       | -                                                                           | Grants a specific role to an account.                                                                       | Nonpayable          |
+| **Function**   | `hasRole`                      | `role` (bytes32), `account` (address)                                                       | `bool`                                                                      | Checks if an account has a specific role.                                                                   | View                |
+| **Function**   | `setFeeRecipient`              | `v` (address)                                                                               | -                                                                           | Sets the address that receives trading and launch fees.                                                     | Nonpayable          |
+| **Function**   | `stopTrade`                    | `tokenAddress` (address)                                                                    | -                                                                           | Halts trading for a specific token.                                                                         | Nonpayable          |
+| **Function**   | `withdrawEth`                  | `to` (address), `amount` (uint256)                                                          | -                                                                           | Withdraws Ether from the contract to a specified address.                                                   | Nonpayable          |
+| **Function**   | `PANCAKE_ROUTER`               | -                                                                                           | `address`                                                                   | Returns the address of the PancakeSwap router (constant).                                                   | View                |
+| **Function**   | `_tokenInfos`                  | `tokenAddress` (address)                                                                    | `TokenInfo` struct (bool, uint256, etc.)                                    | Returns metadata about a token (e.g., launch time, offers, trading status).                                 | View                |
 
 ## Usage
 ### Prerequisites
@@ -53,30 +57,25 @@ The full ABI is provided in [`abi.json`](./abi.json). Below is a summary of the 
 Using ethers.js to call `createToken`:
 
 ```javascript
-const ethers = require('ethers');
-const abi = require('./abi.json');
-
-// Connect to BSC
-const provider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
 const wallet = new ethers.Wallet('YOUR_PRIVATE_KEY', provider);
+const contractWithSigner = contract.connect(wallet);
 
-// Contract setup
-const contractAddress = '0x5c952063c7fc8610FFDB798152D69F0B9550762b';
-const contract = new ethers.Contract(contractAddress, abi, wallet);
-
-// Create a new token
-async function createMemeToken() {
-  const tx = await contract.createToken(
-    "TestMemeCoin",   // Name
-    "TMC",          // Symbol
-    ethers.utils.parseUnits("1000000000", 18), // Total supply (1 billion)
-    { value: ethers.utils.parseEther("0.005") } // 0.005 BNB fee
+async function createNewToken() {
+  const tx = await contractWithSigner.createToken(
+    123, // requestId
+    "MyToken", // name
+    "MTK", // symbol
+    ethers.utils.parseEther("1000000"), // totalSupply
+    ethers.utils.parseEther("1000"), // maxOffer
+    ethers.utils.parseEther("100"), // presale
+    Math.floor(Date.now() / 1000) + 3600, // launchTime (1 hour from now)
+    { value: ethers.utils.parseEther("0.1") } // launchFee in ETH
   );
-  const receipt = await tx.wait();
-  console.log("Token created at:", receipt.events[0].args.token);
+  await tx.wait();
+  console.log('Token Created:', tx.hash);
 }
 
-createMemeToken();
+createNewToken();
 ```
 
 ### Deploying a Test Version
