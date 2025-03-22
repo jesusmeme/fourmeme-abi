@@ -99,8 +99,5 @@ If you find this repository helpful, consider supporting me with a coffee or som
 *Every little bit helps—thank you!*
 Contact me [here](https://t.me/memelordcrypto) if you have any questions.
 
-## License
-This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
-
 ## Disclaimer
 This ABI is provided "as is" for educational and developmental purposes. Use at your own risk, especially for live transactions. Always verify with the official Four.meme contract at `0x5c952063c7fc8610FFDB798152D69F0B9550762b` before interacting with real funds.
