@@ -103,7 +103,7 @@ If you find this repository helpful, consider supporting me with a coffee or som
 - **Ethereum (ETH)**: `0x7777746B8E28059676bd053D8B86Cd60B6872eec`  
 - **Solana (SOL)**: `tipRJZ4AKbWV6WFN9sVaJtDsrfQKg2bF3YfPrLUxSVi`  
 *Every little bit helps—thank you!*
-Contact me on [Telegram @memelordcrypto](https://t.me/memelordcrypto) if you have any questions.
+Contact me [here](https://t.me/memelordcrypto) if you have any questions.
 
 ## License
 This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
